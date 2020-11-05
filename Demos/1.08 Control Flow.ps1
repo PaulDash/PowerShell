@@ -80,10 +80,10 @@ if ($ComputerName -eq 'LON-DC1') {
 # Does exact comparisons by default, but can also use wildcards or Regular Expressions.
 cls
 switch -Wildcard (Read-Host -Prompt 'Type a computer name') {
-    '*DC*' { 'The DOMAIN CONTROLLER'}
-    '*CL*' { 'The CLIENT'}
-    '*LON*'{ 'in London'; BREAK }
-    '*OSL*'{ 'in Oslo'   }
-    '*WDC*'{ 'in Washington, District of Columbia' }
-    default { 'UNKNOWN'}
+    '*DC*'  { 'The DOMAIN CONTROLLER'}
+    '*CL*'  { 'The CLIENT'}
+    '*LON*' { 'in London'; BREAK }
+    '*OSL*' { 'in Oslo'   }
+    '*WDC*' { 'in Washington, District of Columbia' }
+    default { 'UNKNOWN' }
 }
