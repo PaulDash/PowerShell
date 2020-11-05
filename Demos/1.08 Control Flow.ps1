@@ -85,4 +85,5 @@ switch -Wildcard (Read-Host -Prompt 'Type a computer name') {
     '*LON*'{ 'in London'; BREAK }
     '*OSL*'{ 'in Oslo'   }
     '*WDC*'{ 'in Washington, District of Columbia' }
+    default { 'UNKNOWN'}
 }
