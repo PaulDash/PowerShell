@@ -14,7 +14,7 @@
 ### FOREACH
 # In cmdlet form, this typically takes input from the pipeline.
 # The special placeholder variable ($_ or $PSItem) is used to represent each individual passed object.
-Get-Service X* | ForEach-Object { Write-Host -f White -b DarkCyan $_.DisplayName}
+Get-Service X* | ForEach-Object { Write-Host -f White -b DarkCyan $_.DisplayName }
 
 # In statement form, a new variable and a collection to iterate are enclosed parenthesis,
 # and the new variable is used in the code block to represent each individual passed object.
@@ -80,9 +80,10 @@ if ($ComputerName -eq 'LON-DC1') {
 # Does exact comparisons by default, but can also use wildcards or Regular Expressions.
 cls
 switch -Wildcard (Read-Host -Prompt 'Type a computer name') {
-    '*DC*' { 'The DOMAIN CONTROLLER'}
-    '*CL*' { 'The CLIENT'}
-    '*LON*'{ 'in London'; BREAK }
-    '*OSL*'{ 'in Oslo'   }
-    '*WDC*'{ 'in Washington, District of Columbia' }
+    '*DC*'  { 'The DOMAIN CONTROLLER'}
+    '*CL*'  { 'The CLIENT'}
+    '*LON*' { 'in London'; BREAK }
+    '*OSL*' { 'in Oslo'   }
+    '*WDC*' { 'in Washington, District of Columbia' }
+    default { 'UNKNOWN COMPUTER' }
 }
