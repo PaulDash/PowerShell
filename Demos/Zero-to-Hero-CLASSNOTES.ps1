@@ -204,6 +204,11 @@ $array[$array.Count -1]
 $array[-2]   # Cool! You can index from end.
 $array[20]   # NOT cool. No out-of-bounds errors.
 
+# collections typically show up as the type of object that is inside
+$array | Get-Member
+# you can see that this is an array by using a method
+$array.GetType()
+
 # easy way to loop through elements of an array
 $array | ForEach-Object { Write-Host -f Yellow -b Black "The number $_" }
 # side-note: be careful with variables in strings - PowerShell is not greedy
@@ -211,11 +216,24 @@ $services | ForEach-Object { Write-Host -f Yellow -b Black "The service name $_.
 # the fix:
 $services | ForEach-Object { Write-Host -f Yellow -b Black "The service name $($_.DisplayName)" }
 
+# if you need to loop through an array to look for an element, use these operators instead
+3 -in $array # false in our case
+$array -contains 34 # true
+
+$emptyArray = @()
+
+$twoDimensional = @(A1,A2),@(B1,B2)
+$twoDimensional[1][0]
+
 # expensive memory-wise
-$array = $array + 1000000
+$array = $array + 100000
+# because it creates a copy of the data in memory
+# as an array is of a fixed size
+$array.IsFixedSize
 
 # uses less memory but requires more work.
 $list  = New-Object System.Collections.ArrayList
+$list.IsFixedSize # no, it's flexible
 $list.Add(1)
 $list.Add(2)
 $list.Add(34)
@@ -224,12 +242,14 @@ $list
 $list[0]
 
 # hash tables
-$thing = @{
+$hashTable = @{
     'Shape' = 'circle';
     'Color' = 'blue'
 }
 # are indexed by Key, not order
-$thing['color']
+$hashTable['color']
+
+$emptyHashTable = @{}
 
 
 ########### FLOW CONTROL
