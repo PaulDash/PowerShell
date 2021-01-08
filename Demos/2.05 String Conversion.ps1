@@ -22,7 +22,8 @@ Get-Content .\emails.txt
 
 # First attempt
 Get-Content .\emails.txt |
-Convert-String -Example "First.Last@domain.com=First Last"
+Convert-String -Example "First.Last@domain.com=Last,First" |
+ConvertFrom-Csv -Header 'Last','First'
 
 # Almost. This didn't find the last entry.
 # Possibly because it had a much longer domain extension.
@@ -39,11 +40,11 @@ $netstat = netstat
 
 # Let's see just the data from that output.
 # We don't care about the first 4 lines and want to clean up the leading spaces.
-($netstat[4..$netstat.Length]).trim()
+($netstat[4..($netstat.Length-1)]).trim()
 
 # Now just have the system make sense of it by converting to objects.
 # You need to tell the cmdlet which "columns" of data it's seeing.
-($netstat[4..$netstat.Length]).trim() |
+($netstat[4..($netstat.Length-1)]).trim() |
 ConvertFrom-String  -PropertyNames Protocol,TO,FROM,State
 
 # ...or you can just use this, as Bror said ;)
