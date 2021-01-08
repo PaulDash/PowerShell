@@ -43,16 +43,19 @@ for ($i = 1; $i -lt 11; $i++) {
 # Difference is in WHEN the condition is checked and whether we expect a value of TRUE or FALSE.
 
 # Checks condition at the beginning. Condition has to be FALSE to quit.
+Clear-Host
 while ((Read-Host -Prompt 'Type "Q" to quit') -ne 'Q') {
     'Not quitting yet'
 }
 
 # Checks condition after first execution of script block. Condition has to be FALSE to quit.
+Clear-Host
 do {
     'Not quitting yet'
 } while ((Read-Host -Prompt 'Type "Q" to quit') -ne 'Q')
 
 # Checks condition after first execution of script block. Condition has to be TRUE to quit.
+Clear-Host
 do {
     'Not quitting yet'
 } until ((Read-Host -Prompt 'Type "Q" to quit') -eq 'Q')
