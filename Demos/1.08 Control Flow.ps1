@@ -70,6 +70,10 @@ cls
 $ComputerName = Read-Host -Prompt 'Type a computer name'
 if ($ComputerName -eq 'LON-DC1') {
     'The DC in London'
+} elseif ((Get-Date).Hour -lt 7) { # unrelated comparison, but possible to do within the IF
+    'This is too early for me'
+} elseif ($ComputerName -like "*DC?") {
+    'Some other DC, but NOT the London one'
 } elseif ($ComputerName -like "*CL?") {
     'The client'
 } else {
