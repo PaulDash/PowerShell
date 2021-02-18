@@ -29,7 +29,7 @@ Install-Package -Verbose
 
 # Store connection parameters in an object like below. May be wise to save this in your Profile.
 # The password is encrypted using your Windows session key. It's safe.
-$MailConfig = [PSCustomObject][ordered]@{Server='mail.kki.pl';Port=587;Address='';User='pavo@kki.pl';Password=''}
+$MailConfig = [PSCustomObject][ordered]@{Server='smtp.gmail.com';Port=587;Address='';User='you@gmail.com';Password=''}
 $MailConfig.Address  = $MailConfig.User
 $MailConfig.Password = Read-Host -Prompt "Password for user $($MailConfig.User) on server $($MailConfig.Server)" -AsSecureString |
                        ConvertFrom-SecureString
