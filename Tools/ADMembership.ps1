@@ -7,6 +7,11 @@
 
 #Requires -Modules ActiveDirectory
 
+# .SYNOPSIS
+# Processes file with user names to produce User / Group pairs based on AD group membership.
+# .NOTES
+# Script for a friend.
+
 Param (
     # Path to user list with a sAMAccountName or DistinguishedName or SID on each line.
     [Parameter(Mandatory=$true)]
