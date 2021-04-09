@@ -9,8 +9,8 @@
 [cmdletbinding()]
 param()
 
-$Modules = Get-Module -ListAvailable | select Name,Version | sort Name,Version
-$DuplicateModules = $Modules | Group-Object Name | ? Count -GT 1
+$Modules = Get-Module -ListAvailable | Select-Object Name,Version | Sort-Object Name,Version
+$DuplicateModules = $Modules | Group-Object Name | Where-Object Count -GT 1
 Write-Verbose $DuplicateModules
 
 foreach ($m in $DuplicateModules) {

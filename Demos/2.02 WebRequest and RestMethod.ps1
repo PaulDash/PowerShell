@@ -18,7 +18,7 @@ Invoke-WebRequest -Uri 'http://www.glasspaper.no'
 # XML
 # Getting the weather data
 
-$PostalCode = '2061' # 2061 Gardermoen
+$PostalCode = '5961' # 2061 Gardermoen
 
 # http://om.yr.no/verdata/xml/
 $yrURI = "http://www.yr.no/sted/Norge/postnummer/$PostalCode/varsel.xml"
@@ -39,7 +39,7 @@ Select-Object @{N='Temp'; E={ [string]($_.temperature.value) + ' °C' }},
 
 # Run this hidden ;)
 #region Extremes
-$ExtremeData = Invoke-RestMethod -Uri 'https://api.met.no/weatherapi/extremeswwc/1.2/'
+$ExtremeData = Invoke-RestMethod -Uri 'https://api.met.no/weatherapi/extremeswwc/1.3/'
 $ExtremeData.weatherdata.product.time.lowestTemperatures.location |
 Select-Object Name, @{Name='Temp';Expression={$_.lowestTemperature.value}} |
 Sort-Object -Property Temp |
@@ -47,6 +47,8 @@ Select-Object -Last 1 |
 ForEach-Object {Write-Host "Which is not as bad as $($_.Temp) degrees in $($_.Name)!"}
 #endregion
 
+# MET.no has now changed this API and the information there requires an account:
+# https://frost.met.no/api.html#!/records/getRecords
 
 
 #################################################

@@ -89,7 +89,7 @@ function Send-Mail {
         Add-Type -Path $PathMailKit,$PathMailKit,$PathBuffers
 
         # Create message object
-        $Message = New-Object MimeKit.MimeMessage
+        $Message = New-Object -TypeName MimeKit.MimeMessage
         # Define From, To, and Subject
         $Message.From.Add($MailConfig.Address)
         foreach ($MailRecipient in $To) {
