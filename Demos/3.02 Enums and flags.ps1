@@ -29,8 +29,8 @@ Get-ADUser -Filter "Name -like 'Test*' -and CanonicalName -like '*IT*'" -Propert
 # ENUMERATIONS
 
 # This one exists
-[System.DayOfWeek]::Friday
-[System.DayOfWeek]6
+[System.DayOfWeek]::Thursday
+[System.DayOfWeek]5
 
 # We can create enumerations ourselves
 enum DayOfWeekend {
