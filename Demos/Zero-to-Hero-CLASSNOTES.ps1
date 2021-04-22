@@ -222,7 +222,7 @@ $array -contains 34 # true
 
 $emptyArray = @()
 
-$twoDimensional = @(A1,A2),@(B1,B2)
+$twoDimensional = @('A1','A2'),@('B1','B2')
 $twoDimensional[1][0]
 
 # expensive memory-wise
@@ -326,4 +326,3 @@ Get-AuthenticodeSignature .\SampleSignedScript.ps1
 
 # to sign a script, first find a code-signing certificate
 Get-ChildItem cert:\ -Recurse -CodeSigningCert
-

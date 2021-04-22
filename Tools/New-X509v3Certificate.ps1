@@ -1,10 +1,11 @@
 ﻿#           _          _       
 #        __| |____ ___| |__    
-#       / _  |__  / __| '_ \           Script: 'New-X509v3Certificate.ps1'
-#      | (_| |(_| \__ \ | | |          Author: Paul 'Dash'
-#       \__,_\__,_|___/_| |_(_)        E-mail: paul@dash.training
+#       / _  |__  / __| '_ \           
+#      | (_| |(_| \__ \ | | |
+#       \__,_\__,_|___/_| |_(_)
 #       T  R  A  I  N  I  N  G 
 
+#          Script: 'New-X509v3Certificate.ps1'
 
 # Original author: Adam Conkle - Microsoft Corporation 
 # Original source: http://social.technet.microsoft.com/wiki/contents/articles/4714.how-to-generate-a-self-signed-certificate-using-powershell.aspx
@@ -17,17 +18,16 @@
 #                  * generated certificate is added to correct stores
 
 
-Write-Warning "This script is provided AS-IS with no warranties and confers no rights."
 Write-Host    "This script will generate a self-signed certificates with exportable private key.`n"
 
 $ContextAnswer = Read-Host "Store certificate in the User or Computer store? (U/C)"
 if ($ContextAnswer -eq "U") { 
-    $machineContext = 0 
-    $initContext = 1
+    $machineContext    = 0 
+    $initContext       = 1
     $CertStoreLocation = 'CurrentUser' 
 } elseif ($ContextAnswer -eq "C") { 
-    $machineContext = 1 
-    $initContext = 2
+    $machineContext    = 1 
+    $initContext       = 2
     $CertStoreLocation = 'LocalMachine'
 } else { 
     Write-Host "Invalid selection. Exiting."
@@ -37,6 +37,9 @@ if ($ContextAnswer -eq "U") {
 # Set certificate Subject name based on user input
 $Subject = Read-Host "Subject of the certificate  "
 
+# Dangerous things about to happen ;)
+$ErrorActionPreference = 'Stop'
+
 if (Get-ChildItem "Cert:\$CertStoreLocation\My\" | Where-Object {$_.Subject -eq "CN=$Subject"}) {
     Write-Warning "Other certificates for that subject exist."
 }
@@ -45,7 +48,7 @@ $DistinguishedName = New-Object -ComObject "X509Enrollment.CX500DistinguishedNam
 $DistinguishedName.Encode("CN=$Subject", 0)
 
 # Generate private key
-$key = New-Object -ComObject 'X509Enrollment.CX509PrivateKey.1'  
+$key = New-Object -ComObject 'X509Enrollment.CX509PrivateKey.1'
 $key.ProviderName = 'Microsoft RSA SChannel Cryptographic Provider'
 #$key.ProviderName = 'Microsoft Base Smart Card Crypto Provider' # from CryptoAPI
 #$key.ProviderName = 'Microsoft Smart Card Key Storage Provider' # from CNG 
@@ -60,12 +63,12 @@ $key.Create()
 
 # Create OID for code signing
 ### TODO: check out the .NET type System.Security.Cryptography.X509Certificates.X509EnhancedKeyUsageExtension
-$codesigningoid = New-Object -ComObject "X509Enrollment.CObjectId.1"
+$codesigningoid = New-Object -ComObject 'X509Enrollment.CObjectId.1'
 ### TODO: put this in a SWITCH
-$codesigningoid.InitializeFromValue("1.3.6.1.5.5.7.3.3")        # Code Signing
+#$codesigningoid.InitializeFromValue("1.3.6.1.5.5.7.3.3")        # Code Signing
 #$codesigningoid.InitializeFromValue("1.3.6.1.5.5.7.3.1")       # Server Authentication
 #$codesigningoid.InitializeFromValue("1.3.6.1.5.5.7.3.2")       # Client Authentication
-#$codesigningoid.InitializeFromValue("1.3.6.1.5.5.7.3.4")       # Secure Email
+$codesigningoid.InitializeFromValue("1.3.6.1.5.5.7.3.4")       # Secure Email
 #$codesigningoid.InitializeFromValue("1.3.6.1.5.5.7.3.8")       # Time Stamping
 #$codesigningoid.InitializeFromValue("1.3.6.1.4.1.311.10.3.12") # Document Signing
 
@@ -116,20 +119,20 @@ do {
 
 
 # Add list of OIDs to extensions
-$ekuext = New-Object -ComObject "X509Enrollment.CX509ExtensionEnhancedKeyUsage.1"
+$ekuext = New-Object -ComObject 'X509Enrollment.CX509ExtensionEnhancedKeyUsage.1'
 $ekuext.InitializeEncode($ekuoids) 
 
 # Create certificate request
-$CertReq = New-Object -ComObject "X509Enrollment.CX509CertificateRequestCertificate.1"  
+$CertReq = New-Object -ComObject 'X509Enrollment.CX509CertificateRequestCertificate.1'
 $CertReq.InitializeFromPrivateKey($initContext, $key, "")
 ### $CertReq.CriticalExtensions.Remove(0) # Remove 'Key Usage'
 $CertReq.Subject = $DistinguishedName
-$CertReq.Issuer = $CertReq.Subject
-$CertReq.NotBefore = (Get-Date).Date ### TODO: fix for GMT
+### $CertReq.Issuer = $CertReq.Subject # Self-signed, so Issuer generated automatically
+$CertReq.NotBefore = (Get-Date).ToUniversalTime().Date
 $CertReq.NotAfter = $CertReq.NotBefore.AddYears(1)
 
-# Set signing algorithm to sha256
-[string]$SigAlgorithmName = "sha256"
+# Set signing algorithm to SHA-2 256-bit
+[string]$SigAlgorithmName = 'sha256'
 $SigAlgorithmOID = New-Object -ComObject X509Enrollment.CObjectId
 $SigAlgorithmOID.InitializeFromValue(([Security.Cryptography.Oid]$SigAlgorithmName).Value)
 $CertReq.HashAlgorithm = $SigAlgorithmOID
@@ -138,24 +141,28 @@ $CertReq.HashAlgorithm = $SigAlgorithmOID
 $CertReq.X509Extensions.Add($ekuext)
 
 # Generate request
-$CertReq.Encode() 
+$CertReq.Encode()
 
 # Send request
-$enrollment = New-Object -ComObject "X509Enrollment.CX509Enrollment.1"  
-$enrollment.InitializeFromRequest($CertReq)
-# Receive requested certificate
-$Cert = $enrollment.CreateRequest(0)
+$Enrollment = New-Object -ComObject 'X509Enrollment.CX509Enrollment.1'
+$Enrollment.InitializeFromRequest($CertReq)
+# Receive requested certificate in DER-encoded format
+$CertBASE64 = $Enrollment.CreateRequest(0)
 
+Write-Host "Certificate creation: $($Enrollment.Status.ErrorText)" -ForegroundColor Green
 
-### TODO: Add handling if creation fails!
-Write-Host "Certificate creation: $($enrollment.Status.ErrorText)" -ForegroundColor Green
 # Install certificate in store
-$enrollment.InstallResponse(4, $Cert, 0, "") 
+# https://docs.microsoft.com/en-us/windows/win32/api/certenroll/nf-certenroll-ix509enrollment-installresponse
+# Restrictions = 4 (AllowUntrustedRoot)
+# Encoding     = 0 (XCN_CRYPT_STRING_BASE64HEADER)
+$Enrollment.InstallResponse(4, $CertBASE64, 0, "")
 
 # Export certificate to a file
 $FilePath = Read-Host "Directory to store .CER file"
 if (Test-Path -Path $FilePath -PathType Container) {
-    $SignedCert = Get-ChildItem "Cert:\$CertStoreLocation\My\$($SignedCert.Thumbprint)"
+    # Encoding = 12 (XCN_CRYPT_STRING_HEXRAW)
+    $SignedCert = Get-ChildItem "Cert:\$CertStoreLocation\My\" |
+                  Where-Object {$_.SerialNumber -eq $CertReq.SerialNumber(12).Trim()}
     $ExportedCert = Export-Certificate -Cert $SignedCert -FilePath (Join-Path -Path $FilePath -ChildPath "$Subject.cer")
 } else {
     Write-Warning "Certificate export: Could not write to path $FilePath. Will not save to the CA and publishers stores."
