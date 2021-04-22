@@ -17,7 +17,8 @@ break # STOP RUNNING
 # CREATING EXTERNAL HELP
 
 # How does Get-ChildItem hold its help content?
-Get-Command Get-ChildItem | select HelpFile
+(Get-Command Get-ChildItem).Module.ModuleBase
+Get-Command Get-ChildItem | Select-Object -ExpandProperty HelpFile
 Invoke-Item (Get-Command Get-ChildItem | select -ExpandProperty HelpFile)
 
 # Prerequisite
@@ -68,7 +69,7 @@ $lr = 'LocalRepository'
 New-Item -Path T:\ -Name $lr -ItemType Directory
 New-SmbShare -Name $lr -Path "T:\$lr" -FullAccess Administrators -ReadAccess Everyone
 
-Register-PSRepository -Name $lr -SourceLocation "T:\$lr" -InstallationPolicy Trusted
+Register-PSRepository -Name $lr -SourceLocation "\\DASH\$lr" -InstallationPolicy Trusted
 
 # REMEMBER to remove the HelpSource directory before publishing!
 Publish-Module -Path . -Repository $lr
