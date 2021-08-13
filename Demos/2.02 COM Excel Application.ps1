@@ -11,6 +11,7 @@
 # Documentation:
 # https://docs.microsoft.com/en-us/office/vba/api/overview/excel/object-model
 
+#Requires -Modules Pscx
 # Requires the Out-Clipboard cmdlet from the PowerShell Community Extensions
 # https://github.com/Pscx/Pscx
 
