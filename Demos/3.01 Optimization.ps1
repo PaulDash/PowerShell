@@ -32,15 +32,16 @@ TALKING POINTS - Before trying to optimize, ask yourself:
 Clear-Host
 (Measure-Command {
 
-1..10000 | ForEach-Object { Write-Output $_ | Out-Null }
+1..10000 | ForEach-Object { Write-Output $_ }
 
 }).TotalMilliseconds
 
 (Measure-Command {
 
-foreach ($number in (1..10000)) { Write-Output $number | Out-Null }
+foreach ($number in (1..10000)) { Write-Output $number }
 
 }).TotalMilliseconds
+
 
 
 ######################################## Cmdlet Parameters

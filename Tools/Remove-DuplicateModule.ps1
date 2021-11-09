@@ -6,18 +6,53 @@
 #       T  R  A  I  N  I  N  G 
 
 
-[cmdletbinding()]
-param()
+# Removes duplicates of modules installed using the package manager
+# and leaves only the latest version.
 
-$Modules = Get-Module -ListAvailable | Select-Object Name,Version | Sort-Object Name,Version
+# Run as a cleanup task after using Update-Module!
+
+[cmdletbinding()]
+param(
+    # Generates output object with Name and Version of removed module
+    [switch]$OutputRemovedModule
+)
+
+Write-Progress -Activity 'Removing duplicate modules' `
+               -CurrentOperation 'Getting list of installed modules' `
+               -PercentComplete 0 `
+               -Id 0
+
+Write-Verbose 'Getting list of installed modules...'
+
+$Modules = Get-Module -ListAvailable -Verbose:$false | Select-Object Name,Version | Sort-Object Name,Version
 $DuplicateModules = $Modules | Group-Object Name | Where-Object Count -GT 1
-Write-Verbose $DuplicateModules
+
+Write-Verbose 'Starting module removal...'
+
+$i = 1 # counter for progress bar
 
 foreach ($m in $DuplicateModules) {
+
+    Write-Progress -Activity 'Removing duplicate modules' `
+                   -CurrentOperation "removal of $($m.Name)" `
+                   -PercentComplete ($i++/$DuplicateModules.Count*100) `
+                   -Id 0
+
     $Versions = $m.Group | Sort Version
-    for ($i = 0; $i -lt $Versions.Count -1; $i++) {
-        New-Object PSCustomObject -Property @{ 'Name'    = $Versions[$i].Name;
-                                               'Version' = $Versions[$i].Version }
-        Uninstall-Module -Name $Versions[$i].Name -RequiredVersion $Versions[$i].Version -Force | Out-Null
-    }
-}
+    for ($j = 0; $j -lt $Versions.Count -1; $j++) {
+        try {
+            Uninstall-Module -Name $Versions[$j].Name -RequiredVersion $Versions[$j].Version -Force -ErrorAction Stop | Out-Null
+            if ($OutputRemovedModule) { # otherwise stay quiet
+                New-Object PSCustomObject -Property @{ 'Name'    = $Versions[$j].Name;
+                                                       'Version' = $Versions[$j].Version }
+            }
+            Write-Verbose "Removed $($Versions[$j].Name) version $($Versions[$j].Version)."
+        } catch {
+            Write-Verbose "Could not remove $($Versions[$j].Name) version $($Versions[$j].Version)."
+        }
+    } # END for every $Version in group
+    Write-Verbose "Newer version of $($Versions[-1].Name) is $($Versions[-1].Version)."
+} # END foreach $DuplicateModules group
+
+Write-Progress -Id 0 -Completed
+Write-Verbose "DONE."
