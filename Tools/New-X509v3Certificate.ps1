@@ -59,16 +59,14 @@ $key.MachineContext = $machineContext
 $key.ExportPolicy = 1 # 0 for non-exportable Private Key
 $key.Create()
 
-
-
-# Create OID for code signing
+# Create OID for intended usage
 ### TODO: check out the .NET type System.Security.Cryptography.X509Certificates.X509EnhancedKeyUsageExtension
 $codesigningoid = New-Object -ComObject 'X509Enrollment.CObjectId.1'
 ### TODO: put this in a SWITCH
-#$codesigningoid.InitializeFromValue("1.3.6.1.5.5.7.3.3")        # Code Signing
+$codesigningoid.InitializeFromValue("1.3.6.1.5.5.7.3.3")        # Code Signing
 #$codesigningoid.InitializeFromValue("1.3.6.1.5.5.7.3.1")       # Server Authentication
 #$codesigningoid.InitializeFromValue("1.3.6.1.5.5.7.3.2")       # Client Authentication
-$codesigningoid.InitializeFromValue("1.3.6.1.5.5.7.3.4")       # Secure Email
+#$codesigningoid.InitializeFromValue("1.3.6.1.5.5.7.3.4")       # Secure Email
 #$codesigningoid.InitializeFromValue("1.3.6.1.5.5.7.3.8")       # Time Stamping
 #$codesigningoid.InitializeFromValue("1.3.6.1.4.1.311.10.3.12") # Document Signing
 
@@ -79,11 +77,8 @@ $ekuoids.Add($codesigningoid)
 
 ##################
 <#
-
 # Add OID to list
 $ekuoids = New-Object -ComObject "X509Enrollment.CObjectIds.1"
-
-
 
 @'
 Code Signing
@@ -158,34 +153,34 @@ Write-Host "Certificate creation: $($Enrollment.Status.ErrorText)" -ForegroundCo
 $Enrollment.InstallResponse(4, $CertBASE64, 0, "")
 
 # Export certificate to a file
-$FilePath = Read-Host "Directory to store .CER file"
+$FilePath = Read-Host "Directory path to store the .CER file"
 if (Test-Path -Path $FilePath -PathType Container) {
     # Encoding = 12 (XCN_CRYPT_STRING_HEXRAW)
     $SignedCert = Get-ChildItem "Cert:\$CertStoreLocation\My\" |
                   Where-Object {$_.SerialNumber -eq $CertReq.SerialNumber(12).Trim()}
-    $ExportedCert = Export-Certificate -Cert $SignedCert -FilePath (Join-Path -Path $FilePath -ChildPath "$Subject.cer")
+    $ExportedCertPath = Export-Certificate -Cert $SignedCert -FilePath (Join-Path -Path $FilePath -ChildPath "$Subject.cer")
 } else {
-    Write-Warning "Certificate export: Could not write to path $FilePath. Will not save to the CA and publishers stores."
+    Write-Warning "Certificate export:   Could not write to path $FilePath. Will not save to the CA and publishers stores."
     exit
 }
 # Verify export
-if (Test-Path -Path $ExportedCert -PathType Leaf) {
-    Write-Host "Certificate export: Completed successfully." -ForegroundColor Green
+if (Test-Path -Path $ExportedCertPath -PathType Leaf) {
+    Write-Host "Certificate export:   Completed successfully." -ForegroundColor Green
 } else {
-    Write-Warning "Certificate export: File export failed. Will not save to the CA and publishers stores."
+    Write-Warning "Certificate export:   File export failed. Will not save to the CA and publishers stores."
     exit
 }
 
 if ($SignedCert.EnhancedKeyUsageList.FriendlyName -contains 'Code Signing') {
 
     # Import certificate into Root CA (or Intermediate Certification Authorities) and Trusted Publishers
-    Import-Certificate -FilePath $ExportedCert -CertStoreLocation "Cert:\$CertStoreLocation\Root" | Out-Null
-    Import-Certificate -FilePath $ExportedCert -CertStoreLocation "Cert:\$CertStoreLocation\TrustedPublisher" | Out-Null
+    Import-Certificate -FilePath $ExportedCertPath -CertStoreLocation "Cert:\$CertStoreLocation\Root" | Out-Null
+    Import-Certificate -FilePath $ExportedCertPath -CertStoreLocation "Cert:\$CertStoreLocation\TrustedPublisher" | Out-Null
     # Verify import
     if ((Get-ChildItem "Cert:\$CertStoreLocation\Root\$($SignedCert.Thumbprint)") -and
         (Get-ChildItem "Cert:\$CertStoreLocation\TrustedPublisher\$($SignedCert.Thumbprint)")) {
-            Write-Host "Certificate installation: Completed successfully." -Fore Green
+            Write-Host "Certificate install:  Completed successfully." -Fore Green
     }
 
-    Write-Host "Use this path for Set-AuthenticodeSignature:`nCert:\$CertStoreLocation\My\$($SignedCert.Thumbprint)"
+    Write-Host "`nUse this path for Set-AuthenticodeSignature:`nCert:\$CertStoreLocation\My\$($SignedCert.Thumbprint)"
 }
