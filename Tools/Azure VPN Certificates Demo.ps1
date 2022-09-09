@@ -17,7 +17,8 @@ $cert = New-SelfSignedCertificate -Type Custom -KeySpec Signature `
 # Displays above root certificate
 # Copy-and-paste this into the 'Point-to-site configuration' page of the 'Virtual network gateway'
 # in the section 'Root certificates'
-$cert.rawdata | ConvertTo-Base64 -NoLineBreak | Out-File s:\vpn-Demo-CA.txt
+$cert.rawdata | ConvertTo-Base64 -NoLineBreak | Out-File t:\vpn-Demo-CA.txt
+notepad.exe t:\vpn-Demo-CA.txt
 
 # Creates a client certificate that is placed into the current user's Private certificate store
 New-SelfSignedCertificate -Type Custom -DnsName GDC-VPN-Client -KeySpec Signature `
