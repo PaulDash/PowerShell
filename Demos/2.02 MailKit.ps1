@@ -27,8 +27,8 @@ Install-Package -Verbose
 
 # SERVER DATA
 
-# Store connection parameters in an object like below. May be wise to save this in your Profile.
-# The password is encrypted using your Windows session key. It's safe.
+# Store connection parameters in an object like below. It may be wise to save this in your $PROFILE.
+# The password is encrypted using your Windows session key. It's safe!
 $MailConfig = [PSCustomObject][ordered]@{Server='smtp.gmail.com';Port=587;Address='';User='you@gmail.com';Password=''}
 $MailConfig.Address  = $MailConfig.User
 $MailConfig.Password = Read-Host -Prompt "Password for user $($MailConfig.User) on server $($MailConfig.Server)" -AsSecureString |
@@ -78,9 +78,9 @@ function Send-Mail {
         
         # TODO: Change so that paths don't need to be hard-coded
         # TODO: Consider different environment versions
-        $PathMailKit = 'C:\Program Files\PackageManagement\NuGet\Packages\MailKit.2.10.1\lib\net48\MailKit.dll'
-        $PathMimeKit = 'C:\Program Files\PackageManagement\NuGet\Packages\MimeKit.2.10.1\lib\net48\MimeKit.dll'
-        $PathBuffers = 'C:\Program Files\PackageManagement\NuGet\Packages\System.Buffers.4.5.1\lib\net461\System.Buffers.dll'
+        $PathMailKit =  'C:\Program Files\PackageManagement\NuGet\Packages\MailKit.3.3.0\lib\net48\MailKit.dll'
+        $PathMimeKit =  'C:\Program Files\PackageManagement\NuGet\Packages\MimeKit.3.4.0\lib\net48\MimeKit.dll'
+        $PathBuffers =  'C:\Program Files\PackageManagement\NuGet\Packages\System.Buffers.4.5.1\lib\net461\System.Buffers.dll'
         [System.Reflection.Assembly]::LoadFile($PathMailKit) > $null
         [System.Reflection.Assembly]::LoadFile($PathMimeKit) > $null
         [System.Reflection.Assembly]::LoadFile($PathBuffers) > $null

@@ -46,7 +46,7 @@ Get-ScriptAnalyzerRule
 Write-Host -f White -b DarkCyan "There are $((Get-ScriptAnalyzerRule).Count) rules analyzed"
 
 Set-Location (Get-Module ServiceTools -ListAvailable).ModuleBase
-Invoke-ScriptAnalyzer .\ServiceTools.psm1
+Invoke-ScriptAnalyzer .\ServiceTools.psm1 -ReportSummary
 
 
 

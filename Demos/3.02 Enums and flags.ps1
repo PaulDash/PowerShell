@@ -72,5 +72,7 @@ $CanonicalNameFlags
 $CanonicalNameFlags -as [SystemFlags]
 
 # ANSWER:
-# Ah, so the Canonical Name is constructed attribute, so a value isn't really held in AD.
+# Ah, so the Canonical Name is a constructed attribute,
+# so its value isn't really held in AD, but rather constructed on-the-go !
+
 # That's why we can't search based on it.
