@@ -1,5 +1,5 @@
 ﻿#
-#        _| _ __|_           Script:  '2.02 WebRequest and RestMethod.ps1' 
+#        _| _ __|_           Script:  '2.02 WebRequest and RestMethod.ps1'
 #       (_|(_|_)| ) .        Author:  Paul 'Dash'
 #      t r a i n i n g       Contact: paul@dash.training
 #                            Created: 2016-03-23
@@ -20,6 +20,7 @@ Invoke-WebRequest -Uri 'http://www.glasspaper.no'
 
 $PostalCode = '5961' # 2061 Gardermoen
 
+# TODO: update from the old APIs
 # http://om.yr.no/verdata/xml/
 $yrURI = "http://www.yr.no/sted/Norge/postnummer/$PostalCode/varsel.xml"
 
