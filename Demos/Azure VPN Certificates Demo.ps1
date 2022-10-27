@@ -16,8 +16,8 @@ $cert = New-SelfSignedCertificate -Type Custom -KeySpec Signature `
 # Displays above root certificate
 # Copy-and-paste this into the 'Point-to-site configuration' page of the 'Virtual network gateway'
 # in the section 'Root certificates'
-$cert.rawdata | ConvertTo-Base64 -NoLineBreak | Out-File s:\vpn-CA.txt
-notepad.exe s:\vpn-CA.txt
+$cert.rawdata | ConvertTo-Base64 -NoLineBreak | Out-File T:\vpn-CA.txt
+notepad.exe T:\vpn-CA.txt
 
 # Creates a client certificate that is placed into the current user's Private certificate store
 New-SelfSignedCertificate -Type Custom -DnsName DemoVPN-Client -KeySpec Signature `

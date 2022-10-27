@@ -1,5 +1,5 @@
 ﻿#
-#        _| _ __|_           Script:  '2.02 COM Excel Application.ps1' 
+#        _| _ __|_           Script:  '2.02 COM Excel Application.ps1'
 #       (_|(_|_)| ) .        Author:  Paul 'Dash'
 #      t r a i n i n g       Contact: paul@dash.training
 #                            Created: 2021-02-09
