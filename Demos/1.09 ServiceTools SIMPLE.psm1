@@ -33,7 +33,7 @@ function Get-ServiceStartInfo {
     [string[]]$ComputerName = 'localhost'
     )
 
-    Write-Verbose "Looking for service '$Name' on computer '$ComputerName'."
+    Write-Debug "Looking for service '$Name' on computer '$ComputerName'."
 
     Get-CimInstance -ClassName Win32_Service |
     Where-Object Name -eq $Name |
