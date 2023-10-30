@@ -68,6 +68,7 @@ do {
 # Make sure the most specific case is checked first. Only single match is made.
 cls
 $ComputerName = Read-Host -Prompt 'Type a computer name'
+
 if ($ComputerName -eq 'LON-DC1') {
     'The DC in London'
 } elseif ((Get-Date).Hour -lt 7) { # unrelated comparison, but possible to do within the IF
@@ -78,6 +79,40 @@ if ($ComputerName -eq 'LON-DC1') {
     'The client'
 } else {
     'Unknown computer'
+}
+
+
+# You can do multiple comparisons in one IF clause...
+Clear-Host
+$ComputerName = Read-Host -Prompt 'Type a computer name'
+if ($ComputerName -eq 'LON-DC1' -or $ComputerName -eq 'LON-DC2' -or $ComputerName -eq 'LON-DC3') {
+    'This is a known DC in London'
+} else {
+    'Unknown computer'
+}
+
+# ...but think of ways to shorten the comparisons
+Clear-Host
+$ComputerName = Read-Host -Prompt 'Type a computer name'
+if ($ComputerName -in 'LON-DC1','LON-DC2','LON-DC3') {
+    'This is a known DC in London'
+} else {
+    'Unknown computer'
+}
+
+
+# just LEFT side of -AND being checked in the IF
+Set-StrictMode -Version Latest
+Clear-Host
+if ($false -and ($ComputerName.RandomAccessMemorySize -gt 16GB)) {
+    'Will nobe be reached'
+} else {
+    'Will be reached without running right side'
+}
+
+Clear-Host
+if ($true -or ($ComputerName.StorageDiskCapacity -gt 100GB)) {
+    'Will be reached without running right side'
 }
 
 
