@@ -54,7 +54,7 @@ Clear-Host
 
 (Measure-Command {
 
-Get-Random -Minimum 1 -Maximum 1000000
+Get-Random -Minimum 1 -Maximum 1000001
 
 }).TotalMilliseconds
 

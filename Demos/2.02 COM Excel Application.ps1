@@ -51,7 +51,7 @@ if (Get-Module -ListAvailable pscx) {
     exit
 }
 # Paste into Excel
-$XLSheet.Range("A1").Select | Out-Null
+$XLSheet.Range("A1").Select() | Out-Null
 $XLSheet.Paste()
 
 # Define chart
@@ -62,4 +62,4 @@ $Chart.SetSourceData($ChartData)
 # Make chart look pretty
 $Chart.ChartTitle.Text = "Top Memory Consumers"
 $Chart.HasLegend = $false
-$Chart.ChartType = [Microsoft.Office.Interop.Excel.XLChartType]::xl3DColumn
+$Chart.ChartType = [Microsoft.Office.Interop.Excel.XLChartType]-4100
