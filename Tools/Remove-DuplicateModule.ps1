@@ -1,9 +1,9 @@
-﻿#           _          _       
-#        __| |____ ___| |__    
+﻿#           _          _
+#        __| |____ ___| |__
 #       / _  |__  / __| '_ \           Script: 'Remove-DuplicateModule.ps1'
 #      | (_| |(_| \__ \ | | |          Author: Paul 'Dash'
 #       \__,_\__,_|___/_| |_(_)        E-mail: paul@dash.training
-#       T  R  A  I  N  I  N  G 
+#       T  R  A  I  N  I  N  G
 
 
 # Removes duplicates of modules installed using the package manager
@@ -38,7 +38,7 @@ foreach ($m in $DuplicateModules) {
                    -PercentComplete ($i++/$DuplicateModules.Count*100) `
                    -Id 0
 
-    $Versions = $m.Group | Sort Version
+    $Versions = $m.Group | Sort-Object Version
     for ($j = 0; $j -lt $Versions.Count -1; $j++) {
         try {
             Uninstall-Module -Name $Versions[$j].Name -RequiredVersion $Versions[$j].Version -Force -ErrorAction Stop | Out-Null

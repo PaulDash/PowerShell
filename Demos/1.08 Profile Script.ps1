@@ -10,7 +10,7 @@
 
 
 # Turn off command prediction
-if ($PSVersionTable.PSVersion.Major -ge 7) {
+if ((Get-PSReadLineOption).PredictionSource) {
     Set-PSReadLineOption -PredictionSource None
 }
 
