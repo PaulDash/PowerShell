@@ -68,6 +68,7 @@ while ($Choice -ne 'Q') {
 
 # A better menu system that works across different host applications
 #################################################
+Clear-Host
 
 # Build the menu
 $MenuItems = @()
@@ -93,4 +94,5 @@ $Choice = $Host.UI.PromptForChoice($Title, $Instruction, $MenuItems, $DefaultIte
 
 # The rest of the logic can be implemented as in the above Foreach loop
 # based on the value that is stored in $Choice
-$Choice
+Write-Host "The output is $Choice"
+

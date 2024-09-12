@@ -10,7 +10,7 @@
 #################################################
 # HTML
 # Getting a simple web page
-Invoke-WebRequest -Uri 'http://www.glasspaper.no'
+Invoke-WebRequest -Uri 'https://www.glasspaper.no' -Verbose
 
 
 
@@ -56,7 +56,7 @@ ForEach-Object {Write-Host "Which is not as bad as $($_.Temp) degrees in $($_.Na
 # JSON
 # Validating the postal code
 
-$PostalCode = '2061'
+$PostalCode = '1415'
 
 # https://developer.bring.com/api/postal-code/
 $BringURI = 'https://api.bring.com/shippingguide/api/postalCode.json?clientUrl=dash.training&country=no&pnr='
@@ -72,3 +72,10 @@ $PostalCodeResult = Invoke-RestMethod ($BringURI + $PostalCode)
 if ($PostalCodeResult.valid) {
     Write-Host -F Black -B Gray "Postal code $PostalCode is valid for $($PostalCodeResult.result)."
 }
+
+
+$LocationForecastURI = 'https://api.met.no/weatherapi/locationforecast/2.0/compact?lat=59.90&lon=10.75'
+$AuthHead = @{'User-Agent' = 'Mozilla/5.0 (Windows NT 10.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.135 Safari/537.36 Edge/12.10136';
+             }
+
+$ForecastResult = Invoke-RestMethod -Headers $AuthHead -Uri $LocationForecastURI

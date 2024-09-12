@@ -23,7 +23,7 @@ $XLWorkbook = $XLApp.Workbooks.Add()
 # Choose the first worksheet (tab along the bottom).
 $XLSheet = $XLWorkbook.Worksheets.Item(1)
 # Enter a value into row X, column Y.
-$XLSheet.Cells.Item(1,1) = "Hello, World!"
+$XLSheet.Cells.Item(1,1) = "Hello, Norway!"
 # Show the Excel application's window.
 $XLApp.Visible = $true
 
@@ -63,3 +63,6 @@ $Chart.SetSourceData($ChartData)
 $Chart.ChartTitle.Text = "Top Memory Consumers"
 $Chart.HasLegend = $false
 $Chart.ChartType = [Microsoft.Office.Interop.Excel.XLChartType]-4100
+
+# Save the chart as a file
+$Chart.Export('T:\MemChart.jpg')

@@ -22,15 +22,15 @@ Get-Content .\emails.txt
 
 # First attempt
 Get-Content .\emails.txt |
-Convert-String -Example "First.Last@domain.com=Last,First" |
-ConvertFrom-Csv -Header 'Last','First'
+Convert-String -Example "First.Last@domain.com=Last,First" 
 
 # Almost. This didn't find the last entry.
 # Possibly because it had a much longer domain extension.
 
 # Second attempt, with two "examples" for the command to learn from
 Get-Content .\emails.txt |
-Convert-String -Example "First.Last@domain.com=First Last","First.Last@short.muchlonger=First Last"
+Convert-String -Example "First.Last@domain.com=Last,First","First.Last@short.muchlonger=Last,First" |
+ConvertFrom-Csv -Header 'Last','First'
 
 
 

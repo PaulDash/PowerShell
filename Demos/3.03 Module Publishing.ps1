@@ -17,7 +17,7 @@ break # STOP RUNNING
 # CREATING EXTERNAL HELP
 
 # How does Get-ChildItem hold its help content?
-(Get-Command Get-ChildItem).Module.ModuleBase
+Set-Location (Get-Command Get-ChildItem).Module.ModuleBase
 Get-Command Get-ChildItem | Select-Object -ExpandProperty HelpFile
 Invoke-Item (Get-Command Get-ChildItem | select -ExpandProperty HelpFile)
 
