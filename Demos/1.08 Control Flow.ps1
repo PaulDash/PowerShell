@@ -64,7 +64,18 @@ do {
 ## CONDITIONAL STATEMENTS
 
 ### IF
-# Like in other languages. Can combine multiple (even different) conditions with 'elseif'.
+# Like in other languages.
+
+cls
+$ComputerName = Read-Host -Prompt 'Type a computer name'
+
+if ($ComputerName -eq 'LON-DC1') {
+    'The DC in London'
+} 
+
+
+
+# Can combine multiple (even different) conditions with 'elseif'.
 # Make sure the most specific case is checked first. Only single match is made.
 cls
 $ComputerName = Read-Host -Prompt 'Type a computer name'
@@ -75,7 +86,7 @@ if ($ComputerName -eq 'LON-DC1') {
     'This is too early for me'
 } elseif ($ComputerName -like "*DC?") {
     'Some other DC, but NOT the London one'
-} elseif ($ComputerName -like "*CL?") {
+} elseif ($ComputerName -like "*CL?" -or $ComputerName -like "*CL??") {
     'The client'
 } else {
     'Unknown computer'
@@ -114,6 +125,10 @@ Clear-Host
 if ($true -or ($ComputerName.StorageDiskCapacity -gt 100GB)) {
     'Will be reached without running right side'
 }
+
+
+# in PowerShell 7 you can also do:
+($ComputerName -LIKE "*DC?") ? 'This is a DC in London' : 'Unknown Computer'
 
 
 # SWITCH (also called CASE) STATEMENT
