@@ -328,6 +328,11 @@ Enter-PSSession @RemotingParams -UseSSL -SessionOption $PSSessionOption
 ###############################################################################
 # using regular certificates (not SNI) in Windows certificate storage
 
+# Server Name Indication (SNI) is an extension to the TLS protocol.
+# It allows a client or browser to indicate which hostname it is trying to connect to at the start of the TLS handshake.
+# This allows the server to present multiple certificates on the same IP address and port number.
+
+
 # certificates for IIS need to be in this Certificate Store
 Get-ChildItem Cert:\LocalMachine\WebHosting
 Copy-Item -Path "Cert:\LocalMachine\My\$($Cert5.Thumbprint)" `
@@ -377,7 +382,7 @@ Get-AzContext
 
 $LetsEncryptParams = @{ Domain     = 'test.GrayDayCafe.com';
                         Contact    = 'paul@dash.training';
-                        AcceptTOS  = $true;
+                        AcceptTOS  = $true;    # Terms of Service
                         Plugin     = 'Azure';
                         PluginArgs = @{ AZSubscriptionId = (Get-AzContext).Subscription.Id;
                                         AZAccessToken    = (Get-AzAccessToken).Token } }
