@@ -1,5 +1,5 @@
 ﻿#
-#        _| _ __|_           Script:  '1.08 Control Flow.ps1' 
+#        _| _ __|_           Script:  '1.08 Control Flow.ps1'
 #       (_|(_|_)| ) .        Author:  Paul 'Dash'
 #      t r a i n i n g       Contact: paul@dash.training
 #                            Created: 2019-09-20
@@ -33,7 +33,7 @@ foreach ($OneService in $ManyServices) {
 #                           operation to be performed on the counter each time the loop runs.
 # Traditionally, counters are named i, j, k.
 # This example counts from 1 to 10:
-for ($i = 1; $i -lt 11; $i++) { 
+for ($i = 1; $i -lt 11; $i++) {
     Write-Host -f White -b DarkCyan $i
 }
 
@@ -45,19 +45,19 @@ for ($i = 1; $i -lt 11; $i++) {
 # Checks condition at the beginning. Condition has to be FALSE to quit.
 Clear-Host
 while ((Read-Host -Prompt 'Type "Q" to quit') -ne 'Q') {
-    'Not quitting yet'
+    Write-Host -f White -b DarkCyan 'Running code in ScriptBlock'
 }
 
 # Checks condition after first execution of script block. Condition has to be FALSE to quit.
 Clear-Host
 do {
-    'Not quitting yet'
+    Write-Host -f White -b DarkCyan 'Running code in ScriptBlock'
 } while ((Read-Host -Prompt 'Type "Q" to quit') -ne 'Q')
 
 # Checks condition after first execution of script block. Condition has to be TRUE to quit.
 Clear-Host
 do {
-    'Not quitting yet'
+    Write-Host -f White -b DarkCyan 'Running code in ScriptBlock'
 } until ((Read-Host -Prompt 'Type "Q" to quit') -eq 'Q')
 
 
@@ -71,7 +71,7 @@ $ComputerName = Read-Host -Prompt 'Type a computer name'
 
 if ($ComputerName -eq 'LON-DC1') {
     'The DC in London'
-} 
+}
 
 
 
@@ -116,7 +116,7 @@ if ($ComputerName -in 'LON-DC1','LON-DC2','LON-DC3') {
 Set-StrictMode -Version Latest
 Clear-Host
 if ($false -and ($ComputerName.RandomAccessMemorySize -gt 16GB)) {
-    'Will nobe be reached'
+    'Will not be reached'
 } else {
     'Will be reached without running right side'
 }
