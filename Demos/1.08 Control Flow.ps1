@@ -85,7 +85,7 @@ if ($ComputerName -eq 'LON-DC1') {
 } elseif ((Get-Date).Hour -lt 7) { # unrelated comparison, but possible to do within the IF
     'This is too early for me'
 } elseif ($ComputerName -like "*DC?") {
-    'Some other DC, but NOT the London one'
+    'Some other DC, but not  the London ONE'
 } elseif ($ComputerName -like "*CL?" -or $ComputerName -like "*CL??") {
     'The client'
 } else {
@@ -143,4 +143,20 @@ switch -Wildcard (Read-Host -Prompt 'Type a computer name') {
     '*OSL*' { 'in Oslo'   }
     '*WDC*' { 'in Washington, District of Columbia' }
     default { 'UNKNOWN' }
+}
+
+
+# Break vs Continue
+# Thanks Jiri for asking this ;)
+# TODO: improve this example
+cls
+for ($i = 1; $i -lt 5; $i++) {
+    if (-not ($i % 2)) { continue }
+    $i
+}
+
+cls
+for ($i = 1; $i -lt 5; $i++) {
+    if (-not ($i % 2)) { break }
+    $i
 }
