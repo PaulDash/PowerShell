@@ -1,17 +1,17 @@
-﻿#           _          _       
-#        __| |____ ___| |__    
-#       / _  |__  / __| '_ \           
+﻿#           _          _
+#        __| |____ ___| |__
+#       / _  |__  / __| '_ \
 #      | (_| |(_| \__ \ | | |
 #       \__,_\__,_|___/_| |_(_)
-#       T  R  A  I  N  I  N  G 
+#       T  R  A  I  N  I  N  G
 
 #          Script: 'New-X509v3Certificate.ps1'
 
-# Original author: Adam Conkle - Microsoft Corporation 
+# Original author: Adam Conkle - Microsoft Corporation
 # Original source: http://social.technet.microsoft.com/wiki/contents/articles/4714.how-to-generate-a-self-signed-certificate-using-powershell.aspx
 
 # Adopted by:      Paul Wojcicki-Jarocki - Paul Dash (paul@pauldash.com)
-# Adopted because: * 
+# Adopted because: *
 #                  * commented throughout
 #                  * change to more secure sha256
 #                  * certificate validity period is corrected
@@ -21,41 +21,46 @@
 Write-Host    "This script will generate a self-signed certificates with exportable private key.`n"
 
 $ContextAnswer = Read-Host "Store certificate in the User or Computer store? (U/C)"
-if ($ContextAnswer -eq "U") { 
-    $machineContext    = 0 
+if ($ContextAnswer -eq "U") {
+    $machineContext    = 0
     $initContext       = 1
-    $CertStoreLocation = 'CurrentUser' 
-} elseif ($ContextAnswer -eq "C") { 
-    $machineContext    = 1 
+    $CertStoreLocation = 'CurrentUser'
+} elseif ($ContextAnswer -eq "C") {
+    $machineContext    = 1
     $initContext       = 2
     $CertStoreLocation = 'LocalMachine'
-} else { 
+} else {
     Write-Host "Invalid selection. Exiting."
-    Exit 
+    Exit
 }
 
 # Set certificate Subject name based on user input
-$Subject = Read-Host "Subject of the certificate  "
+$SubjectCN = Read-Host "Subject name of the certificate "
+$SubjectE  = Read-Host "Subject E-mail address          "
 
 # Dangerous things about to happen ;)
 $ErrorActionPreference = 'Stop'
 
-if (Get-ChildItem "Cert:\$CertStoreLocation\My\" | Where-Object {$_.Subject -eq "CN=$Subject"}) {
+if (Get-ChildItem "Cert:\$CertStoreLocation\My\" | Where-Object {$_.Subject -like "*CN=$Subject*"}) {
     Write-Warning "Other certificates for that subject exist."
 }
 
-$DistinguishedName = New-Object -ComObject "X509Enrollment.CX500DistinguishedName.1"  
-$DistinguishedName.Encode("CN=$Subject", 0)
+$DistinguishedName = New-Object -ComObject "X509Enrollment.CX500DistinguishedName.1"
+if ($SubjectE) {
+    $DistinguishedName.Encode("CN=$SubjectCN, E=$SubjectE", 0)
+} else {
+    $DistinguishedName.Encode("CN=$SubjectCN", 0)
+}
 
 # Generate private key
 $key = New-Object -ComObject 'X509Enrollment.CX509PrivateKey.1'
 $key.ProviderName = 'Microsoft RSA SChannel Cryptographic Provider'
 #$key.ProviderName = 'Microsoft Base Smart Card Crypto Provider' # from CryptoAPI
-#$key.ProviderName = 'Microsoft Smart Card Key Storage Provider' # from CNG 
+#$key.ProviderName = 'Microsoft Smart Card Key Storage Provider' # from CNG
 $key.KeySpec = 1 # for other purposes: 3
-$key.Length = 2048 
-$key.SecurityDescriptor = "D:PAI(A;;0xd01f01ff;;;SY)(A;;0xd01f01ff;;;BA)(A;;0x80120089;;;NS)"  
-$key.MachineContext = $machineContext 
+$key.Length = 2048
+$key.SecurityDescriptor = "D:PAI(A;;0xd01f01ff;;;SY)(A;;0xd01f01ff;;;BA)(A;;0x80120089;;;NS)"
+$key.MachineContext = $machineContext
 $key.ExportPolicy = 1 # 0 for non-exportable Private Key
 $key.Create()
 
@@ -91,7 +96,7 @@ Document Signing
 $ExitSelectingOID = $false
 do {
     $ekuOID = New-Object -ComObject "X509Enrollment.CObjectId.1"
-    
+
     switch (Read-Host -Prompt 'Type choice of Enhanced Key Usage or [D]one')
     {
         '1' { $ekuOID.InitializeFromValue("1.3.6.1.5.5.7.3.3") }
@@ -115,7 +120,7 @@ do {
 
 # Add list of OIDs to extensions
 $ekuext = New-Object -ComObject 'X509Enrollment.CX509ExtensionEnhancedKeyUsage.1'
-$ekuext.InitializeEncode($ekuoids) 
+$ekuext.InitializeEncode($ekuoids)
 
 # Create certificate request
 $CertReq = New-Object -ComObject 'X509Enrollment.CX509CertificateRequestCertificate.1'
