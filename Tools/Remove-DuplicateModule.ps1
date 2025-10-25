@@ -24,15 +24,18 @@ Write-Progress -Activity 'Removing duplicate modules' `
 
 Write-Verbose 'Getting list of installed modules...'
 
-$Modules = Get-Module -ListAvailable -Verbose:$false | Select-Object Name,Version | Sort-Object Name,Version
-$DuplicateModules = $Modules | Group-Object Name | Where-Object Count -GT 1
+$Modules = Get-Module -ListAvailable -Verbose:$false |
+           Select-Object Name,Version |
+           Sort-Object   Name,Version
+$DuplicateModules = $Modules |
+                    Group-Object Name |
+                    Where-Object Count -GT 1
 
 Write-Verbose 'Starting module removal...'
 
 $i = 1 # counter for progress bar
 
 foreach ($m in $DuplicateModules) {
-
     Write-Progress -Activity 'Removing duplicate modules' `
                    -CurrentOperation "removal of $($m.Name)" `
                    -PercentComplete ($i++/$DuplicateModules.Count*100) `
