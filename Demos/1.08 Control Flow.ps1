@@ -64,8 +64,7 @@ do {
 ## CONDITIONAL STATEMENTS
 
 ### IF
-# Like in other languages.
-
+# Like in other languages, processes a script block if the condition is true
 cls
 $ComputerName = Read-Host -Prompt 'Type a computer name'
 
@@ -73,6 +72,15 @@ if ($ComputerName -eq 'LON-DC1') {
     'The DC in London'
 }
 
+# Combined with ELSE, to run a script block when the condition is false
+cls
+$ComputerName = Read-Host -Prompt 'Type a computer name'
+
+if ($ComputerName -eq 'LON-DC1') {
+    'The DC in London'
+} else {
+    'Unknown computer'
+}
 
 
 # Can combine multiple (even different) conditions with 'elseif'.

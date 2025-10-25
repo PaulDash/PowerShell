@@ -11,16 +11,19 @@
 # Original source: http://social.technet.microsoft.com/wiki/contents/articles/4714.how-to-generate-a-self-signed-certificate-using-powershell.aspx
 
 # Adopted by:      Paul Wojcicki-Jarocki - Paul Dash (paul@pauldash.com)
-# Adopted because: *
+# Adopted because: * added more options for intended usage (EKU) and Subject fields
 #                  * commented throughout
 #                  * change to more secure sha256
 #                  * certificate validity period is corrected
 #                  * generated certificate is added to correct stores
+#                  * added export of .CER file to user-defined path
+#                  * added checks for existing certificates and successful export/import
 
 
-Write-Host    "This script will generate a self-signed certificates with exportable private key.`n"
 
-$ContextAnswer = Read-Host "Store certificate in the User or Computer store? (U/C)"
+Write-Host    "This script will generate a self-signed certificates with an exportable private key.`n"
+
+$ContextAnswer = Read-Host "Store certificate in the User or Computer store? [U/C]"
 if ($ContextAnswer -eq "U") {
     $machineContext    = 0
     $initContext       = 1
@@ -86,12 +89,12 @@ $ekuoids.Add($codesigningoid)
 $ekuoids = New-Object -ComObject "X509Enrollment.CObjectIds.1"
 
 @'
-Code Signing
-Server Authentication
-Client Authentication
-Secure Email
-Time Stamping
-Document Signing
+1. Code Signing
+2. Server Authentication
+3. Client Authentication
+4. Secure Email
+5. Time Stamping
+6. Document Signing
 '@
 $ExitSelectingOID = $false
 do {
@@ -106,7 +109,7 @@ do {
         '5' { $ekuOID.InitializeFromValue("1.3.6.1.5.5.7.3.8") }
         '6' { $ekuOID.InitializeFromValue("1.3.6.1.4.1.311.10.3.12") }
         'D' { $ExitSelectingOID = $true }
-        Default { 'Unsupported key usage!' }
+        Default { Write-Warning 'Unsupported key usage!' }
     }
 
     if ($ekuOID.Value -and ($ekuOID -notin $ekuoids)) {
